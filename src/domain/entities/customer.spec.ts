@@ -45,7 +45,7 @@ describe("Customer unit tests", () => {
             const customer = new Customer("1", "John Doe");
 
             customer.activate()
-        }).toThrowError("Address is mandatory for customer activation")
+        }).toThrowError("Address is mandatory to customer activation")
     });
 
     it("Should add reward points to customer", () => {
