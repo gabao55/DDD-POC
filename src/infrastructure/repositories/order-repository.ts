@@ -6,6 +6,7 @@ import OrderItem from "../../domain/entities/order_item";
 
 export default class OrderRepository
     implements OrderRepositoryInterface {
+
     async create(entity: Order): Promise<void> {
         await OrderModel.create({
             id: entity.id,
@@ -43,10 +44,36 @@ export default class OrderRepository
         ));
     }
 
-    update(entity: Order): Promise<void> {
-        throw new Error("Method not implemented.");
+    async update(order: Order): Promise<void> {
+        await OrderModel.update({
+            customerId: order.customerId,
+            items: order.items.map((item) => ({
+                id: item.id,
+                productId: item.productId,
+                orderId: order.id,
+                quantity: item.quantity,
+                name: item.name,
+                price: item.price,
+            })),
+            total: order.total(),
+        }, {
+            where: { id: order.id },
+        });
     }
-    findAll(): Promise<Order[]> {
-        throw new Error("Method not implemented.");
+    
+    async findAll(): Promise<Order[]> {
+        return (await OrderModel.findAll({
+            include: [{ model: OrderItemModel }],
+        })).map((orderModel) => new Order(
+            orderModel.id,
+            orderModel.customerId,
+            orderModel.items.map((item) => new OrderItem(
+                item.id,
+                item.name,
+                item.productId,
+                item.price,
+                item.quantity,
+            ))
+        ));
     }
 }
