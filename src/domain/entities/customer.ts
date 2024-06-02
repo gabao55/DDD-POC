@@ -21,6 +21,10 @@ export default class Customer {
     return this._name;
   }
 
+  getAddress(): string {
+    return this._address.toString();
+  }
+
   get rewardPoints(): number {
     return this._rewardPoints;
   }
