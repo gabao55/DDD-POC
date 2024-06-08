@@ -22,6 +22,9 @@ export default class Customer {
   }
 
   getAddress(): string {
+    if (!this._address)
+      return null;
+    
     return this._address.toString();
   }
 
